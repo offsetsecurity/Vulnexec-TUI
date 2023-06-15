@@ -56,12 +56,12 @@ const screen = lib.blessed.screen({
 })
 
 const grid = new lib.contrib.grid({
-    rows: 50,
-    cols: 50,
+    rows: 100,
+    cols: 100,
     screen: screen
 })
 
-const info_panel = grid.set(0, 0, 10, 30, lib.blessed.box, {
+const info_panel = grid.set(30, 0, 10, 50, lib.blessed.box, {
     label: 'Info',
     content : lib.chalk.redBright(`VulnExec TUI v${lib.fs.readFileSync('./modules/assets/version.txt')}\nMode: ${mode}\nTarget: ${args[args.indexOf('--target') + 1]} - ${target.length} Addresses`),
     style: {
@@ -71,7 +71,7 @@ const info_panel = grid.set(0, 0, 10, 30, lib.blessed.box, {
     }
 })
 
-const vulnexec_main = grid.set(10, 0, 40, 30, lib.blessed.box, {
+const vulnexec_main = grid.set(40, 0, 50, 50, lib.blessed.box, {
     label: 'VulnExec',
     style: {
         border: {
@@ -80,7 +80,7 @@ const vulnexec_main = grid.set(10, 0, 40, 30, lib.blessed.box, {
     }
 })
 
-const nmap_log = grid.set(0, 30, 25, 20, lib.blessed.box, {
+const nmap_log = grid.set(40, 50, 50, 25, lib.blessed.log, {
     label: 'Nmap Log',
     style: {
         border: {
@@ -89,8 +89,28 @@ const nmap_log = grid.set(0, 30, 25, 20, lib.blessed.box, {
     }
 })
 
-const meta_sploit_log = grid.set(25, 30, 25, 20, lib.blessed.box, {
+const target_log = grid.set(0, 50, 40, 25, lib.blessed.box, {
     label: 'Target Log',
+    style: {
+        border: {
+            fg: 'red'
+        }
+    }
+})
+
+const logo = grid.set(0, 0, 30, 50, lib.contrib.picture, {
+    file: './modules/assets/logo.png',
+    cols: 75,
+
+    style: {
+        border: {
+            fg: 'red'
+        }
+    }
+})
+
+const meta_box = grid.set(0, 75, 90, 25, lib.blessed.log, {
+    label: 'Metasploit Log',
     style: {
         border: {
             fg: 'red'
@@ -105,6 +125,9 @@ setInterval(() => {
 
 
 const main = async () => {
+
+    let plus = lib.chalk.greenBright('[+] ')
+    let alive = []
     if (mode == 'Loud') {
        await vulnexec_main.setContent(`${vulnexec_main.getContent()}Starting VulnExec TUI v${lib.fs.readFileSync('./modules/assets/version.txt')}`)
        await mod.misc.delay(1000)
@@ -114,11 +137,24 @@ const main = async () => {
            let scan = await mod.nmap_mod.is_alive(target[i])
            await mod.misc.delay(1000) * Math.floor(Math.random() * 10)
               if (scan) {
-                nmap_log.setContent(`${nmap_log.getContent()}\n${lib.chalk.greenBright(target[i])} is alive`)
+                nmap_log.log(`${lib.chalk.greenBright(target[i])} is alive`)
+                alive.push(target[i])
               } else {
-                nmap_log.setContent(`${nmap_log.getContent()}\n${lib.chalk.redBright(target[i])} is dead`)
+                nmap_log.log(`${lib.chalk.redBright(target[i])} is not alive`)
               }
 
+                await mod.misc.delay(1000) * Math.floor(Math.random() * 10)
+
+                if (i === target.length -1 && alive.length > 0) {
+                    await target_log.setContent(`${alive.length} target(s) are alive\nTarget list:`)
+                    for (let i = 0; i < alive.length; i++) {
+                        await target_log.setContent(`${target_log.getContent()}\n${ plus + alive[i]}`)
+                    }
+                } else if (i === target.length -1 && alive.length == 0) {
+                    await target_log.setContent(`No targets are alive`)
+
+                    target_log.setContent(target_log.getContent() + '\nPlease Press ' + lib.chalk.redBright('CTRL + C') + ' to exit VulnExec')
+                }
        }
     }
 
@@ -130,7 +166,7 @@ module.exports = {
     info_panel,
     vulnexec_main,
     nmap_log,
-    meta_sploit_log,
+    target_log,
     mode,
     target
 }

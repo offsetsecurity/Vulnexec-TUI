@@ -1,6 +1,6 @@
 // declare all dependencies required for the tui
 const blessed = require('neo-blessed')
-const contrib = require('blessed-contrib')
+const contrib = require('neo-blessed-contrib')
 
 // declare dependecies required for vulnexec stanalone
 const fs = require('fs')
