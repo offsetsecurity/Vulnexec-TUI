@@ -1,6 +1,11 @@
 {
   "dependencies": {
-    "blessed": "^0.1.81",
-    "blessed-contrib": "^4.11.0"
+    "blessed-contrib": "^4.11.0",
+    "chalk": "^4.1.2",
+    "get-ip-range": "^4.0.1",
+    "is-reachable": "^5.2.1",
+    "neo-blessed": "^0.2.0",
+    "node-nmap": "^4.0.0",
+    "spinnies": "^0.5.1"
   }
 }

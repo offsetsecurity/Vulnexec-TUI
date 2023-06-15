@@ -1,0 +1,1 @@
+const { lib, mod } = require('./modules/dependencies.js')
