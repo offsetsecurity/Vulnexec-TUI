@@ -98,16 +98,23 @@ const target_log = grid.set(0, 50, 40, 25, lib.blessed.box, {
     }
 })
 
-const logo = grid.set(0, 0, 30, 50, lib.contrib.picture, {
-    file: './modules/assets/logo.png',
-    cols: 75,
-
+const logo = grid.set(0, 0, 30, 50, lib.contrib.lcd, { segmentWidth: 0.06 // how wide are the segments in % so 50% = 0.5
+, segmentInterval: 0 // spacing between the segments in % so 50% = 0.550% = 0.5
+, strokeWidth: 0.1 // spacing between the segments in % so 50% = 0.5
+, elements: 8 // how many elements in the display. or how many characters can be displayed.
+, display: 321 // what should be displayed before first call to setDisplay
+, elementSpacing: 0 // spacing between each element
+, elementPadding: 0 // how far away from the edges to put the elements
+, color: 'red' // color for the segments
+, label: 'Storage Remaining',
     style: {
         border: {
             fg: 'red'
         }
     }
+    
 })
+
 
 const meta_box = grid.set(0, 75, 90, 25, lib.blessed.log, {
     label: 'Metasploit Log',
@@ -120,6 +127,7 @@ const meta_box = grid.set(0, 75, 90, 25, lib.blessed.log, {
 
 
 setInterval(() => {
+    logo.setDisplay('VULNEXEC')
     screen.render()
 }, 100)
 
@@ -133,7 +141,7 @@ const main = async () => {
        await mod.misc.delay(1000)
 
        for (let i = 0; i < target.length; i++) {
-           await vulnexec_main.setContent(`${vulnexec_main.getContent()}\nScanning ${target[i]}`)
+           await nmap_log.setContent(`${nmap_log.getContent()}\nScanning ${plus + lib.chalk.redBright(target[i])}`)
            let scan = await mod.nmap_mod.is_alive(target[i])
            await mod.misc.delay(1000) * Math.floor(Math.random() * 10)
               if (scan) {
@@ -149,6 +157,15 @@ const main = async () => {
                     await target_log.setContent(`${alive.length} target(s) are alive\nTarget list:`)
                     for (let i = 0; i < alive.length; i++) {
                         await target_log.setContent(`${target_log.getContent()}\n${ plus + alive[i]}`)
+
+                        await mod.misc.delay(1000) * Math.floor(Math.random() * 10)
+
+                        await target_log.setContent(`${target_log.getContent()}\n${ plus + lib.chalk.greenBright('Starting Vulnerability Scan')}`)
+
+                        await mod.misc.delay(1000) * Math.floor(Math.random() * 10)
+                        let vuln = await mod.nmap_mod.scan_vulns(alive[i], mode)
+
+                        
                     }
                 } else if (i === target.length -1 && alive.length == 0) {
                     await target_log.setContent(`No targets are alive`)
