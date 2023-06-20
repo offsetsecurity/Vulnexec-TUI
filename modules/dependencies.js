@@ -9,7 +9,6 @@ const { spawn,exec } = require('child_process')
 const { promisify } = require('util')
 const execAsync = promisify(exec)
 const spawnAsync = promisify(spawn)
-const nmap = require('node-nmap')
 const spinnies = require('spinnies')
 const chalk = require('chalk')
 const {getIPRange} = require('get-ip-range')
@@ -40,7 +39,6 @@ const lib = {
     promisify,
     execAsync,
     spawnAsync,
-    nmap,
     chalk,
     spinner,
     getIPRange,
