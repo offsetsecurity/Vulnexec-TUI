@@ -5,6 +5,12 @@
     "is-reachable": "^5.2.1",
     "neo-blessed": "^0.2.0",
     "neo-blessed-contrib": "^4.9.0",
-    "spinnies": "^0.5.1"
-  }
+    "spinnies": "^0.5.1",
+    "@snyk/protect": "latest"
+  },
+  "scripts": {
+    "prepare": "npm run snyk-protect",
+    "snyk-protect": "snyk-protect"
+  },
+  "snyk": true
 }

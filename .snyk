@@ -1,0 +1,10 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:request:20160119':
+    - neo-blessed-contrib > picture-tube > request:
+        patched: '2023-06-27T15:09:23.990Z'
+        id: 'npm:request:20160119'
+        path: neo-blessed-contrib > picture-tube > request
